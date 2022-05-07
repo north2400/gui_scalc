@@ -3,13 +3,6 @@ import numpy as np
 import tkinter.filedialog as fd
 import os
 
-# 読み込みファイルの選択（ファイルパスの取得）
-path_read = fd.askopenfilename(title="CSVファイルを選択",
-                               filetypes=[("CSV", "*.csv")],
-                               initialdir=os.path.abspath(
-                                   os.path.dirname(__file__)))
-
-
 
 # x1～y3までの値をCSVから読み込む
 "！同じ処理を繰り返すため、forループに入れるのもあり"
@@ -64,23 +57,18 @@ for i in range(len(data)):
     # Exy:XY面のひずみ
     calc_res[i, 2] = np.dot(np.dot(z1, A1), d) + np.dot(np.dot(z2, A1), d)
 
-# 出力先を選択
-path_write = fd.asksaveasfilename(title="計算結果をCSVに出力",
-                                  defaultextension="csv",
-                                  filetypes=[("CSVファイル", ".csv")],
-                                  initialdir="./",
-                                  initialfile="output")
 
-# 計算結果配列calc_resをDataFrame型に変換し、csvに出力
-pd.DataFrame(calc_res).to_csv(path_write, encoding="shift_jis")
-
-
-def read(path_read):
+def read(path):
     # CSVファイル読み込み（上2行、左1列をそれぞれヘッダーとインデックスとする）
-    data = pd.read_csv(path_read,
+    data = pd.read_csv(path,
                        header=1,
                        index_col=0)
+    return data
 
+
+def write(path):
+    # 計算結果配列calc_resをDataFrame型に変換し、csvに出力
+    pd.DataFrame(calc_res).to_csv(path, encoding="shift_jis")
 
 
 class Calculate_Strain:
