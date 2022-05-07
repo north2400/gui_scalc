@@ -1,10 +1,13 @@
 import os
+import time
+import threading
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
+from tkinter import ttk
 
 app = tk.Tk()
-app.geometry("750x300")
+app.geometry("750x150")
 app.title("GUI STRAIN CALC.")
 app.resizable(0, 0)
 
@@ -20,6 +23,12 @@ title_error_same = "FILE NAME ERROR"
 # 入力と出力のファイルパスが同じ場合のエラーメッセージ
 msg_error_same = "Please select a different file or location for the input " \
                  "source and output destination. "
+
+# 情報ウィンドウタイトル
+title_info_common = "INFO"
+
+# 処理終了メッセージ
+msg_info_complete = "The process ends successfully."
 
 
 # ==============================================================================
@@ -54,6 +63,23 @@ def browse(mode):
 
 
 # ==============================================================================
+# 計算処理
+def calc():
+    for i in range(100):
+        time.sleep(0.1)
+        pbval.set(i + 1)
+        if i+1 >= 100:
+            mb.showinfo(title_info_common, msg_info_complete)
+
+
+# ==============================================================================
+# 実行ボタン押下時の処理
+def run():
+    thread = threading.Thread(target=calc)
+    thread.start()
+
+
+# ==============================================================================
 # 入出力ファイル選択関連ウィジェット用のフレーム作成
 top_frame = tk.Frame(app, relief=tk.GROOVE, pady=10, padx=10)
 top_frame.pack(anchor=tk.W)
@@ -85,4 +111,26 @@ dest_box.grid(row=1, column=1, padx=10)
 dest_btn = tk.Button(top_frame, width=20, text="Browse...",
                      command=lambda: browse("dest"))
 dest_btn.grid(row=1, column=2, padx=10)
+
+# ==============================================================================
+# プログレスバー用のラベル
+pb_label = tk.Label(top_frame, text="Progress", anchor=tk.W)
+pb_label.grid(row=2, column=0, padx=10)
+
+# 計算の進捗をあらわすプログレスバー
+pbval = tk.IntVar(value=0)
+pb = ttk.Progressbar(
+    top_frame,
+    orient=tk.HORIZONTAL,
+    variable=pbval,
+    maximum=100,
+    length=420,
+    mode='determinate')
+pb.grid(row=2, column=1, padx=10, pady=20)
+
+# 実行ボタン
+run_btn = tk.Button(top_frame, width=20, height=3, text="calculate",
+                    command=run)
+run_btn.grid(row=2, column=2, padx=10, pady=20)
+
 app.mainloop()
