@@ -67,19 +67,26 @@ def browse(mode):
 # 計算処理
 def calc():
     cs = Calculate_Strain(src_box.get(), dest_box.get())
-    cs.calc_strain()
+
+    # 下のwhileループを止めないために、計算処理(cs.calc_strain）を別スレッドとして実行
+    thread1 = threading.Thread(target=cs.calc_strain)
+    thread1.start()
 
     while cs.in_process:
-        pbval.set(cs.progress)
-
+        pbval.set(int(cs.progress))
+        print(cs.progress)
     mb.showinfo(title_info_common, msg_info_complete)
+    pbval.set(0)
+
+    del cs
 
 
 # ==============================================================================
-# 実行ボタン押下時の処理
+# calculateボタン押下時の処理
 def run():
-    thread = threading.Thread(target=calc)
-    thread.start()
+    # main.loop()を止めないために、calc全体を別スレッドとして実行
+    t = threading.Thread(target=calc)
+    t.start()
 
 
 # ==============================================================================

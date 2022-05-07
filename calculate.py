@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
-import tkinter.filedialog as fd
-import os
+import time
 
 
 def write(path, w_data):
@@ -11,7 +10,7 @@ def write(path, w_data):
 
 class Calculate_Strain:
     def __init__(self, input_path, output_path):
-        self.in_process = False
+        self.in_process = True
         self.progress = 0
         self.in_path = input_path
         self.out_path = output_path
@@ -19,7 +18,6 @@ class Calculate_Strain:
         self.data = pd.read_csv(self.in_path, header=1, index_col=0)
 
     def calc_strain(self):
-        # プロセスフラグをTrueに変更
         self.in_process = True
 
         # 計算に必要な変数の生成
@@ -75,7 +73,9 @@ class Calculate_Strain:
                                                                 d)
 
             self.progress = 100 * (i + 1) / len(self.data)
+            time.sleep(0.0005)
 
+        # プロセスフラグをFalseに変更
         self.in_process = False
 
         write(self.out_path, calc_res)
