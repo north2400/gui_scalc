@@ -4,7 +4,7 @@ from tkinter import filedialog as fd
 from tkinter import messagebox as mb
 
 app = tk.Tk()
-app.geometry("720x300")
+app.geometry("750x300")
 app.title("GUI STRAIN CALC.")
 app.resizable(0, 0)
 
@@ -29,23 +29,28 @@ def browse(mode):
     if mode == "src":
         # filedialogのaskopenfilenameを呼び出し
         file_path = fd.askopenfilename(filetypes=typ, initialdir=dir)
-        # destのエントリに入力されているファイルパスと比較
-        if file_path == dest_box.get():
-            mb.showerror(title_error, msg_error_same)
-        else:
-            src_box.delete(0, tk.END)
-            src_box.insert(0, file_path)
+        # ファイルパスが空で無ければ
+        if file_path is not "":
+            # destのエントリに入力されているファイルパスと比較
+            if file_path == dest_box.get():
+                mb.showerror(title_error_same, msg_error_same)
+            else:
+                src_box.delete(0, tk.END)
+                src_box.insert(0, file_path)
+
     # dest（出力先）モードの場合
     elif mode == "dest":
         file_path = fd.asksaveasfilename(filetypes=typ, initialdir=dir,
                                          initialfile="output.csv",
                                          defaultextension=".csv")
-        # srcのエントリに入力されているファイルパスと比較
-        if file_path == src_box.get():
-            mb.showerror(title_error, msg_error_same)
-        else:
-            dest_box.delete(0, tk.END)
-            dest_box.insert(0, file_path)
+        # ファイルパスが空でなければ
+        if file_path is not "":
+            # srcのエントリに入力されているファイルパスと比較
+            if file_path == src_box.get():
+                mb.showerror(title_error_same, msg_error_same)
+            else:
+                dest_box.delete(0, tk.END)
+                dest_box.insert(0, file_path)
 
 
 # ==============================================================================
