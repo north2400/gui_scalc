@@ -1,10 +1,11 @@
 import os
-import time
 import threading
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
 from tkinter import ttk
+
+from calculate import Calculate_Strain
 
 app = tk.Tk()
 app.geometry("750x150")
@@ -65,11 +66,13 @@ def browse(mode):
 # ==============================================================================
 # 計算処理
 def calc():
-    for i in range(100):
-        time.sleep(0.1)
-        pbval.set(i + 1)
-        if i+1 >= 100:
-            mb.showinfo(title_info_common, msg_info_complete)
+    cs = Calculate_Strain(src_box.get(), dest_box.get())
+    cs.calc_strain()
+
+    while cs.in_process:
+        pbval.set(cs.progress)
+
+    mb.showinfo(title_info_common, msg_info_complete)
 
 
 # ==============================================================================
